@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"fmt"
 	"log"
 	"net"
 
@@ -26,4 +28,25 @@ func main() {
 	if _, err := conn.Read(response); err != nil {
 		log.Fatal(err)
 	}
+
+	reader := bytes.NewReader(response)
+
+	// Get the header
+	header, err := message.ParseHeader(reader)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Print the header
+	fmt.Printf("%+v\n", header)
+
+	// Get the questions
+	question, err := message.ParseQuestion(reader)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Print the questions
+	fmt.Printf("%+v\n", question)
+
 }
